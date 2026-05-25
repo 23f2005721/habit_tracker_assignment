@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Tracker</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 480px; margin: 2rem auto; padding: 0 1rem; }
+    h1 { font-size: 1.5rem; }
+    form { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+    input[type="text"] { flex: 1; padding: 0.5rem; }
+    button { padding: 0.5rem 1rem; cursor: pointer; }
+    ul { list-style: none; padding: 0; }
+    li { display: flex; justify-content: space-between; align-items: center;
+         padding: 0.5rem 0; border-bottom: 1px solid #eee; }
+    .delete { background: #fee; border: 1px solid #fcc; color: #900; font-size: 0.85rem; }
+    .empty { color: #666; }
+  </style>
+</head>
+<body>
+  <h1>Habit Tracker</h1>
+
+  <form method="post" action="{{ url_for('index') }}">
+    <input type="text" name="name" placeholder="New habit" required maxlength="100">
+    <button type="submit">Add</button>
+  </form>
+
+  {% if habits %}
+  <ul>
+    {% for habit in habits %}
+    <li>
+      <span>{{ habit.name }}</span>
+      <form method="post" action="{{ url_for('delete_habit', habit_id=habit.id) }}">
+        <button type="submit" class="delete">Delete</button>
+      </form>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="empty">No habits yet. Add one above.</p>
+  {% endif %}
+</body>
+</html>
