@@ -5,14 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Habit Tracker</title>
   <style>
-    body { font-family: system-ui, sans-serif; max-width: 480px; margin: 2rem auto; padding: 0 1rem; }
+    body { font-family: system-ui, sans-serif; max-width: 520px; margin: 2rem auto; padding: 0 1rem; }
     h1 { font-size: 1.5rem; }
     form { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
     input[type="text"] { flex: 1; padding: 0.5rem; }
     button { padding: 0.5rem 1rem; cursor: pointer; }
     ul { list-style: none; padding: 0; }
     li { display: flex; justify-content: space-between; align-items: center;
-         padding: 0.5rem 0; border-bottom: 1px solid #eee; }
+         gap: 0.5rem; padding: 0.75rem 0; border-bottom: 1px solid #eee; }
+    .habit-info { flex: 1; }
+    .habit-name { font-weight: 500; }
+    .streak { color: #2563eb; font-size: 0.9rem; }
+    .actions { display: flex; gap: 0.35rem; flex-shrink: 0; }
+    .complete { background: #efe; border: 1px solid #cec; color: #060; font-size: 0.85rem; }
+    .complete.done { background: #f5f5f5; border-color: #ddd; color: #666; cursor: default; }
     .delete { background: #fee; border: 1px solid #fcc; color: #900; font-size: 0.85rem; }
     .empty { color: #666; }
   </style>
@@ -29,10 +35,22 @@
   <ul>
     {% for habit in habits %}
     <li>
-      <span>{{ habit.name }}</span>
-      <form method="post" action="{{ url_for('delete_habit', habit_id=habit.id) }}">
-        <button type="submit" class="delete">Delete</button>
-      </form>
+      <div class="habit-info">
+        <div class="habit-name">{{ habit.name }}</div>
+        <div class="streak">Streak: {{ habit.streak }}</div>
+      </div>
+      <div class="actions">
+        <form method="post" action="{{ url_for('complete_habit', habit_id=habit.id) }}">
+          {% if habit.completed_today %}
+          <button type="button" class="complete done" disabled>Done today</button>
+          {% else %}
+          <button type="submit" class="complete">Complete today</button>
+          {% endif %}
+        </form>
+        <form method="post" action="{{ url_for('delete_habit', habit_id=habit.id) }}">
+          <button type="submit" class="delete">Delete</button>
+        </form>
+      </div>
     </li>
     {% endfor %}
   </ul>
